@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+ {%load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+</head>
+<body style="background: #FF416C;
+background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
+background: linear-gradient(to right, #FF4B2B, #FF416C);">
+
+<div class="container">
+    <div class="row mt-5">
+        {%for profile in data%}
+            <div class="col-3 mt-3">
+                <div class="card" style="width: 17rem; ">
+                 {%if profile.profile_pic%}
+                     <img src="{{profile.profile_pic.url}}" class="card-img-top" alt="..." height="270px">
+                 {%else%}
+                    <img src="{%static 'socialapp/images/profilepic.png'%}" class="card-img-top" alt="..." height="270px">    
+                 {%endif%}
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        <a href="{%url 'profile_detail' profile.id %}">{{profile}}</a>
+                      </h5>
+                      <p class="card-text">
+                        <div>
+                            Bio:{{profile.bio}} 
+                        </div>
+                        <div>
+                            Email:{{profile.user.email}}
+                        </div>
+                      </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">
+                        <span class="fw-bold text-primary"> {{profile.following.count}}</span>  Following</i>
+                        <span class="fw-bold text-primary"> {{profile.followed_by.count}}</span>  Followers
+                      </li>
+                    </ul>
+                    <div class="card-body">
+                      <form action="{%url 'follow' profile.id%}" method="post">
+                          {%csrf_token%}
+                          {%if profile in request.user.profile.following.all%}
+                            <button type="submit" name="action" value="unfollow">Unfollow</button>
+                          {%else%}
+                            <button type="submit" name="action" value="follow">Follow</button>
+                          {%endif%}  
+                      </form>
+                    </div>
+                  </div>
+            </div>
+        {%endfor%}
+    </div>
+</div>
+
+</body>
+</html>
